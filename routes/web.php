@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ControllerRoutePlaces;
+use App\Http\Controllers\ControllerRouteRoot;
 use Illuminate\Support\Facades\Route;
 use App\Models\Poi;
 
@@ -14,11 +16,5 @@ use App\Models\Poi;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/places', function () {
-    return view('places')
-        ->with('pois', Poi::all());
-});
+Route::get('/', ControllerRouteRoot::class);
+Route::get('/places/{id?}', [ControllerRoutePlaces::class, 'show']);

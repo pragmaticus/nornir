@@ -41,6 +41,12 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'public-img-covers' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/img/covers'),
+            'url' => env('APP_URL').'/storage/img/covers',
+            'visibility' => 'public',
+        ],
 
         's3' => [
             'driver' => 's3',

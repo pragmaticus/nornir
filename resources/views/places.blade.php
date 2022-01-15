@@ -3,10 +3,10 @@
 <head>
 </head>
 <body>
-<h1>Pois</h1>
+<h1>Places</h1>
 <ul>
-    @foreach ($pois as $poi)
-        <li>{{ $poi->name }}</li>
+    @foreach ($places as $place)
+        <li>{{ $place }}</li>
     @endforeach
 </ul>
 </body>
