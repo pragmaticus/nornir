@@ -2,11 +2,11 @@
 
 namespace App\Nova;
 
-use Ctessier\NovaAdvancedImageField\AdvancedImage;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\Trix;
 
 class Poi extends Resource
@@ -47,9 +47,12 @@ class Poi extends Resource
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
-            Trix::make('Description'),
+            Textarea::make('Description')
+                ->rules('required', 'min:32,max:256'),
             Image::make('cover')
+                ->rules('dimensions:ratio=1.91/1')
                 ->disk('public-img-covers')
+
         ];
     }
 
