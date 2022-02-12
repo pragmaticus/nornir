@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -23,22 +24,45 @@ class Poi extends Model {
             $model->description = strip_tags($model->description);
         }
 
-        if (array_key_exists('cover', $dirty) && $model->cover) {
-            self::saveImageVariants($model);
+        if (array_key_exists('cover', $dirty)) {
+
+            $originalCover = $model->getOriginal('cover');
+
+            if ($model->cover) {
+                self::saveImageVariants($model->cover);
+                if ($originalCover) self::deleteImageVariants($originalCover);
+            } else {
+                if ($originalCover) self::deleteImageVariants($originalCover);
+            }
         }
     }
 
-    private static function saveImageVariants ($model) {
+
+    private static function saveImageVariants ($filename) {
 
         $path = Storage::disk('public-img-covers')->path('');
 
-        $image = Image::make($path.$model->cover);
+        $image = Image::make($path.$filename);
 
-        $image->resize(400, 400);
-        $image->save($path.'m_'.$model->cover, 80);
+        $image->resize(1200, 628);
+        $image->save($path.$filename, 80);
 
-        $image->resize(200, 200);
-        $image->save($path.'s_'.$model->cover, 80);
+        $image->resize(600, 314);
+        $image->save($path.'m_'.$filename, 80);
+
+        $image->resize(300, 157);
+        $image->save($path.'s_'.$filename, 80);
+    }
+
+    private static function deleteImageVariants($filename) {
+
+        $path = Storage::disk('public-img-covers')->path('');
+
+        File::delete([
+            $path.$filename,
+            $path.'m_'.$filename,
+            $path.'s_'.$filename
+        ]);
     }
 
 
@@ -51,7 +75,6 @@ class Poi extends Model {
         });
 
         self::created(function($model){
-            // ... code here
         });
 
         self::updating(function($model){
@@ -59,15 +82,13 @@ class Poi extends Model {
         });
 
         self::updated(function($model){
-            // ... code here
         });
 
         self::deleting(function($model){
-            // ... code here
         });
 
         self::deleted(function($model){
-            // ... code here
+            if ($model->cover) self::deleteImageVariants($model->cover);
         });
     }
 }

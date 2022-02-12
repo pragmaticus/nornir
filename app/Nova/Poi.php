@@ -50,7 +50,6 @@ class Poi extends Resource
             Textarea::make('Description')
                 ->rules('required', 'min:32,max:256'),
             Image::make('cover')
-                ->rules('dimensions:ratio=1.91/1')
                 ->disk('public-img-covers')
 
         ];
